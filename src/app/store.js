@@ -3,6 +3,7 @@ import postsReducer from "../features/posts/postsSlice";
 
 export const store = configureStore({
   reducer: {
-    posts: postsReducer
+    posts: postsReducer,
+    devTools: process.env.NODE_ENV !== "production",
   },
 });
