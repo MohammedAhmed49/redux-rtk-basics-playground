@@ -9,18 +9,30 @@ const AddPostForm = () => {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [userId, setUserId] = useState("");
 
   const onTitleChanged = (e) => setTitle(e.target.value);
   const onContentChanged = (e) => setContent(e.target.value);
+  const onAuthorChanged = (e) => setUserId(e.target.value);
 
   const savePostHandler = () => {
     if (title && content) {
-      dispatch(postsActions.addPost(title, content));
+      dispatch(postsActions.addPost(title, content, userId));
       setTitle("");
       setContent("");
+      setUserId("");
     }
   };
 
+  const usersOptions = users.map((user) => (
+    <option key={user.id} value={user.id}>
+      {user.name}
+    </option>
+  ));
+
+  const canSave = () => Boolean(title) && Boolean(content) && Boolean(userId);
+
+  console.log(canSave());
   return (
     <section>
       <h2>Add a New Post</h2>
@@ -33,7 +45,11 @@ const AddPostForm = () => {
           value={title}
           onChange={onTitleChanged}
         />
-
+        <label htmlFor="postAuthor">Author:</label>
+        <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
+          <option value=""></option>
+          {usersOptions}
+        </select>
         <label htmlFor="postContent">Content:</label>
         <textarea
           id="postContent"
@@ -41,7 +57,7 @@ const AddPostForm = () => {
           value={content}
           onChange={onContentChanged}
         />
-        <button type="button" onClick={savePostHandler}>
+        <button type="button" onClick={savePostHandler} disabled={!canSave()}>
           Save Post
         </button>
       </form>
