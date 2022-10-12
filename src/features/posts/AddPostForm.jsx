@@ -32,7 +32,6 @@ const AddPostForm = () => {
 
   const canSave = () => Boolean(title) && Boolean(content) && Boolean(userId);
 
-  console.log(canSave());
   return (
     <section>
       <h2>Add a New Post</h2>
