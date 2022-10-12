@@ -1,27 +1,38 @@
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import PostAuthor from "./PostAuthor";
-import { selectAllPosts } from "./postsSlice";
+import PostExcerpt from "./PostExcerpt";
+import {
+  fetchPosts,
+  selectAllPosts,
+  selectPostsError,
+  selectPostsStatus,
+} from "./postsSlice";
 import ReactionButtons from "./ReactionButtons";
 import TimeAgo from "./TimeAgo";
 
 const PostsList = () => {
   const posts = useSelector(selectAllPosts);
+  const postsStatus = useSelector(selectPostsStatus);
+  const postsError = useSelector(selectPostsError);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (postsStatus === "idle") {
+      dispatch(fetchPosts());
+    }
+  }, [postsStatus, dispatch]);
 
   const orederedPosts = posts
-    .slice()
+    ?.slice()
     .sort((a, b) => b.date.localeCompare(a.date));
 
-  const renderedPosts = orederedPosts.map((post) => (
-    <article key={post.id}>
-      <h3>{post.title}</h3>
-      <p>{post.content.substring(0, 100)}</p>
-      <p className="postCredits">
-        <PostAuthor userId={post.userId} />
-        <TimeAgo timeStamp={post.date} />
-      </p>
-      <ReactionButtons post={post} />
-    </article>
-  ));
+  const renderedPosts =
+    posts.length &&
+    orederedPosts?.map((post) => <PostExcerpt post={post} key={post.id} />);
+
+  console.log(posts.legnth);
 
   return (
     <section>
