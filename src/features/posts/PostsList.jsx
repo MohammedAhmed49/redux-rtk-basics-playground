@@ -24,20 +24,25 @@ const PostsList = () => {
     }
   }, [postsStatus, dispatch]);
 
-  const orederedPosts = posts
-    ?.slice()
-    .sort((a, b) => b.date.localeCompare(a.date));
+  let content;
 
-  const renderedPosts =
-    posts.length &&
-    orederedPosts?.map((post) => <PostExcerpt post={post} key={post.id} />);
-
-  console.log(posts.legnth);
+  if (postsStatus === "loading") {
+    content = <p>Loading posts....</p>;
+  } else if (postsStatus === "succeeded") {
+    const orderedPosts = posts
+      .slice()
+      .sort((a, b) => b.date.localeCompare(a.date));
+    content = orderedPosts.map((post) => (
+      <PostExcerpt post={post} key={post.id} />
+    ));
+  } else if (postsStatus === "failed") {
+    content = <p>{postsError}</p>;
+  }
 
   return (
     <section>
       <h2>Posts</h2>
-      {renderedPosts}
+      {content}
     </section>
   );
 };
