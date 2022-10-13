@@ -28,6 +28,27 @@ export const addPost = createAsyncThunk("posts/addPost", async (post) => {
   }
 });
 
+export const updatePost = createAsyncThunk("posts/updatePost", async (post) => {
+  const { id } = post;
+  try {
+    const response = await axios.put(`${POSTS_URL}/${id}`, post);
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+});
+
+export const deletePost = createAsyncThunk("posts/deletePost", async (post) => {
+  const { id } = post;
+  try {
+    const respose = await axios.delete(`${POSTS_URL}/${id}`);
+    if (respose?.status === 200) return post;
+    return respose?.status;
+  } catch (error) {
+    return error.message;
+  }
+});
+
 const postsSlice = createSlice({
   name: "posts",
   initialState,
@@ -78,6 +99,26 @@ const postsSlice = createSlice({
           coffee: 0,
         };
         state.posts.push(newPost);
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        if (!action.payload?.id) {
+          alert(action.payload);
+          return;
+        }
+
+        const { id } = action.payload;
+        action.payload.date = new Date().toISOString();
+        const posts = state.posts.filter((post) => post.id !== id);
+        state.posts = [...posts, action.payload];
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        if (!action.payload?.id) {
+          alert(action.payload);
+          return;
+        }
+        const { id } = action.payload;
+        const posts = state.posts.filter((post) => post.id != id);
+        state.posts = posts;
       });
   },
 });
@@ -85,10 +126,8 @@ const postsSlice = createSlice({
 export const selectAllPosts = (state) => state.posts.posts;
 export const selectPostsStatus = (state) => state.posts.status;
 export const selectPostsError = (state) => state.posts.error;
-export const selectSinglePost = (state, postId) => {
-  
-  return state.posts.posts.find((post) => post.id === postId);
-}
+export const selectSinglePost = (state, postId) =>
+  state.posts.posts.find((post) => post.id === postId);
 
 export const postsActions = postsSlice.actions;
 
