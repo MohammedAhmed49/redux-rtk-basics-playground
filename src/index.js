@@ -6,7 +6,9 @@ import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { fetchUsers } from "./features/users/usersSlice";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { fetchPosts } from "./features/posts/postsSlice";
 
+store.dispatch(fetchPosts());
 store.dispatch(fetchUsers());
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

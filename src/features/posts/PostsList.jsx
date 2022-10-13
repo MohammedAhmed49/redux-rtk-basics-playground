@@ -1,28 +1,15 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import PostAuthor from "./PostAuthor";
+import { useSelector } from "react-redux";
 import PostExcerpt from "./PostExcerpt";
 import {
-  fetchPosts,
   selectAllPosts,
   selectPostsError,
   selectPostsStatus,
 } from "./postsSlice";
-import ReactionButtons from "./ReactionButtons";
-import TimeAgo from "./TimeAgo";
 
 const PostsList = () => {
   const posts = useSelector(selectAllPosts);
   const postsStatus = useSelector(selectPostsStatus);
   const postsError = useSelector(selectPostsError);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (postsStatus === "idle") {
-      dispatch(fetchPosts());
-    }
-  }, [postsStatus, dispatch]);
 
   let content;
 
