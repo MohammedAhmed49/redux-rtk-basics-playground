@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, nanoid } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { sub } from "date-fns";
 import axios from "axios";
 
@@ -117,7 +117,7 @@ const postsSlice = createSlice({
           return;
         }
         const { id } = action.payload;
-        const posts = state.posts.filter((post) => post.id != id);
+        const posts = state.posts.filter((post) => post.id !== id);
         state.posts = posts;
       });
   },
@@ -128,6 +128,8 @@ export const selectPostsStatus = (state) => state.posts.status;
 export const selectPostsError = (state) => state.posts.error;
 export const selectSinglePost = (state, postId) =>
   state.posts.posts.find((post) => post.id === postId);
+export const selectPostsByUser = (state, userId) =>
+  state.posts.posts.filter((post) => post.userId === userId);
 
 export const postsActions = postsSlice.actions;
 
